@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="get:\heartbeat:Router" doc:id="1dc42250-85dc-49b7-bedd-2f18bca09b5a" >
+		<logger level="INFO" doc:name="Start heartbeat flow" doc:id="e8fad0ad-9c74-4b66-8856-3dcd8de700ed" message='#[import prettifyFlowName from modules::ToolBox&#10;---&#10;{&#10;	step:"Start $(prettifyFlowName(flow.name)) flow",&#10;	data: {}&#10;}]' category="${app.name}" />
+		<ee:transform doc:name="Transform Message" doc:id="ff9324a5-fce2-49a6-a4f4-0552a7563506" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  status: "Healthy",
+  name: "solo-sys-smtp",
+  version: "1.0.1",
+  "type": "Unknown"
+} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="End heartbeat flow" doc:id="3ad5a638-a540-49bb-8dfa-980f86231b1e" message='#[import prettifyFlowName from modules::ToolBox&#10;---&#10;{&#10;	step:"Start $(prettifyFlowName(flow.name)) flow",&#10;	data: {}&#10;}]' category="solo-sys-smtp" />
+	</flow>
+	<flow name="post:\events:application\json:Router" doc:id="fbec41d3-24cf-4750-8e49-53910089b4df" >
+		<ee:transform doc:name="Transform Message" doc:id="33368467-303f-4b45-a326-2be0b9dd790f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  message: "Notifications sent successfully."
+} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

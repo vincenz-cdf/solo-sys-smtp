@@ -1,0 +1,11 @@
+https:
+  port: "8081"
+  
+api:
+  basePath: "/api/v1"
+  
+smtp:
+  host: "smtp.sendgrid.net"
+  port: "587"
+  user: "apikey"
+  password: "${secure::smtp.password}"

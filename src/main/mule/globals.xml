@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="265702c5-0971-4cab-9095-17e6d6fb8c39" basePath="${api.basePath}" >
+		<http:listener-connection host="0.0.0.0" port="${https.port}" />
+	</http:listener-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="96dd3410-7d9d-41cc-a2d2-14dff31518a7" file="properties/${mule.env}-properties.yaml" />
+	<apikit:config outboundHeadersMapName="outboundHeadersMapName" httpStatusVarName="httpStatus" doc:name="Router" doc:id="32c7c56a-d906-4771-b254-3ea0887d88e8" name="Router" api="resource::69f300d3-91e0-4b6b-a1f5-8ea4f765d901:starter_project_raml:1.0.0:raml:zip:starter_project_raml.raml" />
+	<configuration doc:name="Configuration" doc:id="cf389dee-a315-43c7-9278-becde35b54c6" defaultErrorHandler-ref="globalErrorHandler" />
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="7dd845e5-5f7a-4c4c-ba46-91e9e1ae39b8" file="properties/${mule.env}-secure-properties.yaml" key="${mule.encryptionKey}" />
+	<configuration-properties doc:name="Configuration properties" doc:id="e1184ea1-9784-446e-bee4-37f498a93ed2" file="properties/common-properties.yaml" />
+	<email:smtp-config name="Email_SMTP" doc:name="Email SMTP" doc:id="c0f2dcaa-95f9-45c7-96b0-f669f35d5e45" >
+		<email:smtp-connection host="${smtp.host}" port="${smtp.port}" user="${smtp.user}" password="${smtp.password}" />
+	</email:smtp-config>
+</mule>
