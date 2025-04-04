@@ -60,6 +60,14 @@
             display: flex;
             margin-bottom: 15px;
             align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+        
+        .track-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
         }
         
         .track-image {
@@ -92,6 +100,7 @@
             border-radius: 12px;
             display: inline-block;
             margin-top: 5px;
+            margin-right: 5px;
         }
         
         .footer {
@@ -130,54 +139,82 @@
                 height: 50px;
             }
         }
+
+                
+        .track-description {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #555;
+            margin-top: 10px;
+        }
+        
+        .track-details {
+            display: flex;
+            font-size: 13px;
+            color: #777;
+            margin-top: 8px;
+        }
+        
+        .track-details span {
+            margin-right: 15px;
+        }
     </style>
 </head>
 <body>
     <div class="email-container">
         <div class="header">
-            <!-- Logo placeholder - replace with actual logo in DataWeave -->
+            <!-- Logo placeholder - replace with actual logo -->
             <div style="background-color: #3498db; color: white; width: 180px; height: 60px; line-height: 60px; text-align: center; margin: 0 auto; border-radius: 4px;">SAINT-DENIS</div>
             <h1>Programmation Musicale - Parc de la Légion d'honneur</h1>
         </div>
         
         <div class="content">
-            <!-- DataWeave string interpolation for personalized greeting -->
-            <p class="greeting">Bonjour #[payload.lastname] #[payload.firstname],</p>
+            #[%dw 2.0
+            output application/java
+            ---
+            "
+            <p class='greeting'>Bonjour " ++ payload.firstname ++ " " ++ payload.lastname ++ ",</p>
             
             <p>Nous vous remercions d'avoir participé à notre consultation citoyenne concernant la programmation musicale des prochains événements au parc de la Légion d'honneur.</p>
             
-            <!-- DataWeave string interpolation for user genres -->
-            <p>Suite à l'analyse des préférences exprimées par les habitants de Saint-Denis, nous sommes heureux de vous annoncer que les genres musicaux retenus cette année sont : #[joinBy(payload.genres, " et ")].</p>
+            <p>Suite à l'analyse des préférences exprimées par les habitants de Saint-Denis, nous sommes heureux de vous annoncer que les genres musicaux retenus cette année sont : <strong>" ++ (vars.originalPayload.genres joinBy " et ") ++ "</strong>.</p>
             
             <p>Voici un aperçu des titres emblématiques qui seront diffusés lors de l'événement :</p>
+            "
+            ]
             
             <div class="tracks-section">
-                <!-- DataWeave iteration over tracks -->
                 #[%dw 2.0
-                output text/plain
+                output application/java
                 ---
-                payload.tracks map (track) -> {
-                    var trackGenres = track.tags[0..1];
+                (vars.originalPayload.tracks map (track, index) -> do {
+                    var cleanSummary = track.summary replace "/Read more on Last\.fm/" with ("")
                     ---
-                    '<div class="track-item">
-                        <img src="' ++ track.imageUrl ++ '" alt="' ++ track.name ++ '" class="track-image">
-                        <div class="track-info">
-                            <div class="track-name">' ++ track.name ++ '</div>
-                            <div class="track-artist">' ++ track.artist.name ++ '</div>
-                            <div class="track-genre">' ++ trackGenres[0] ++ '</div>
+                    "<div class='track-item'>
+                        <img src='" ++ track.imageUrl ++ "' alt='" ++ track.name ++ "' class='track-image'>
+                        <div class='track-info'>
+                            <div class='track-name'>" ++ track.name ++ "</div>
+                            <div class='track-artist'>" ++ track.artist.name ++ "</div>
+                            <div class='track-description'>" ++ cleanSummary ++ "</div>
                         </div>
-                    </div>'
-                } joinBy ""]
+                    </div>"
+                }) joinBy ""]
             </div>
             
+            #[%dw 2.0
+            output application/java
+            var eventDate = vars.originalPayload.date as Date {format: "yyyy-MM-dd"} as String {format: "d MMMM yyyy"}
+            ---
+            "
             <p>Cette sélection représente la diversité des goûts exprimés par les habitants tout en mettant à l'honneur les morceaux iconiques de ces genres musicaux.</p>
             
-            <!-- DataWeave for formatted date -->
-            <p>Nous vous invitons à venir profiter de cette programmation musicale le #[payload.tracks[0].date as Date {format: "d MMMM yyyy"}] au parc de la Légion d'honneur.</p>
+            <p>Nous vous invitons à venir profiter de cette programmation musicale le <strong>" ++ eventDate ++ "</strong> au parc de la Légion d'honneur.</p>
             
-            <p>Pour plus d'informations sur cet événement et les autres animations culturelles proposées par la ville, n'hésitez pas à consulter notre site internet : <a href="http://www.ville-saint-denis.fr" class="website-link">www.ville-saint-denis.fr</a></p>
+            <p>Pour plus d'informations sur cet événement et les autres animations culturelles proposées par la ville, n'hésitez pas à consulter notre site internet : <a href='http://www.ville-saint-denis.fr' class='website-link'>www.ville-saint-denis.fr</a></p>
             
             <p>Au plaisir de vous retrouver nombreux pour ce moment musical et convivial !</p>
+            "
+            ]
         </div>
         
         <div class="footer">
