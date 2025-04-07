@@ -187,18 +187,27 @@
                 #[%dw 2.0
                 output application/java
                 ---
-                (vars.originalPayload.tracks map (track, index) -> do {
-                    var cleanSummary = track.summary replace "/Read more on Last\.fm/" with ("")
+                do {
+                    var allTracks = vars.originalPayload.tracks
+                    var firstThree = allTracks[0 to 2]
+                    var lastThree = allTracks[(sizeOf(allTracks) - 3) to (sizeOf(allTracks) - 1)]
+                    var displayTracks = 
+                        if (sizeOf(allTracks) <= 6) 
+                            allTracks 
+                        else 
+                            firstThree ++ lastThree
                     ---
-                    "<div class='track-item'>
-                        <img src='" ++ track.imageUrl ++ "' alt='" ++ track.name ++ "' class='track-image'>
-                        <div class='track-info'>
-                            <div class='track-name'>" ++ track.name ++ "</div>
-                            <div class='track-artist'>" ++ track.artist.name ++ "</div>
-                            <div class='track-description'>" ++ cleanSummary ++ "</div>
-                        </div>
-                    </div>"
-                }) joinBy ""]
+                    (displayTracks map (track, index) -> 
+                        "<div class='track-item'>
+                            <img src='" ++ track.imageUrl ++ "' alt='" ++ track.name ++ "' class='track-image'>
+                            <div class='track-info'>
+                                <div class='track-name'>" ++ track.name ++ "</div>
+                                <div class='track-artist'>" ++ track.artist.name ++ "</div>
+                                <div class='track-description'>" ++ track.summary ++ "</div>
+                            </div>
+                        </div>"
+                    ) joinBy ""
+                }]
             </div>
             
             #[%dw 2.0
