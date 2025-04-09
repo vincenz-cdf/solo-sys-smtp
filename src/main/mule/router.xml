@@ -6,7 +6,7 @@
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-	<flow name="paradisio-starter-projet-api-main" doc:id="47472571-d545-470e-9bb8-c763e9e0ef97" >
+	<flow name="solo_sys_smtp-main" doc:id="47472571-d545-470e-9bb8-c763e9e0ef97" >
 		<http:listener doc:name="Listener" doc:id="f8671fa3-1fba-4345-991f-77a1d6c05ea2" config-ref="HTTP_Listener_config" path="/*" >
 			<http:response statusCode="#[vars.httpStatus default 200]" >
 				<http:headers ><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
