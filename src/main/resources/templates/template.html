@@ -212,11 +212,12 @@
             
             #[%dw 2.0
             output application/java
+            var eventDate = vars.originalPayload.eventDate as Date {format: "yyyy-MM-dd"} as String {format: "d MMMM yyyy", locale: "fr"}
             ---
             "
             <p>Cette sélection représente la diversité des goûts exprimés par les habitants tout en mettant à l'honneur les morceaux iconiques de ces genres musicaux.</p>
             
-            <p>Nous vous invitons à venir profiter de cette programmation musicale au parc de la Légion d'honneur.</p>
+            <p>Nous vous invitons à venir profiter de cette programmation musicale le <strong>" ++ eventDate ++ "</strong> au parc de la Légion d'honneur.</p>
             
             <p>Pour plus d'informations sur cet événement et les autres animations culturelles proposées par la ville, n'hésitez pas à consulter notre site internet : <a href='http://www.ville-saint-denis.fr' class='website-link'>www.ville-saint-denis.fr</a></p>
             
