@@ -9,12 +9,14 @@ http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/em
 		<foreach doc:name="For Each users" doc:id="e2cbab35-0f05-424b-a7e5-0e323a0a6dab" collection="#[payload.users]">
 			<set-variable value="#[payload.email]" doc:name="[userEmail]" doc:id="96e26c99-bf4c-41ad-9f5f-1d97b058aa01" variableName="userEmail"/>
 			<parse-template doc:name="Parse Template" doc:id="eb621f5b-dd50-4256-aa6a-7c92bff3ad50" location="templates/template.html" outputMimeType="text/html"/>
-			<email:send doc:name="Send" doc:id="3acc8a7a-a553-4cca-ab7f-ecafc2f46134" fromAddress="vincentapimule@hotmail.com" config-ref="Email_SMTP" subject="#[&quot;Découvrez la sélection musicale pour les événements au parc de la Légion d'honneur !&quot; ++ now()]">
+			<logger level="INFO" doc:name="Logger" doc:id="abce22a4-1af5-4602-a915-619aa9fe3fa4" message="#[payload]"/>
+			<email:send doc:name="Send" doc:id="3acc8a7a-a553-4cca-ab7f-ecafc2f46134" fromAddress="vincentapimule@hotmail.com" config-ref="Email_SMTP" subject="#[&quot;Découvrez la sélection musicale pour les événements au parc de la Légion d'honneur !&quot;]">
 				<email:to-addresses >
 					<email:to-address value="#[vars.userEmail]" />
 				</email:to-addresses>
 				<email:body contentType="text/html" />
 			</email:send>
 		</foreach>
+		<logger level="INFO" doc:name="[INFO] Emails sended" doc:id="2636d9af-a871-4073-91c9-29762e2d0575" message='#[import prettifyFlowName from modules::ToolBox&#10;---&#10;{&#10;	step:"Start $(prettifyFlowName(flow.name)) flow",&#10;	data: "Email sended"&#10;}]' category="solo-sys-smtp" />
 	</sub-flow>
 </mule>

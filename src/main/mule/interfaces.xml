@@ -22,6 +22,7 @@ output application/json
 		<logger level="INFO" doc:name="End heartbeat flow" doc:id="3ad5a638-a540-49bb-8dfa-980f86231b1e" message='#[import prettifyFlowName from modules::ToolBox&#10;---&#10;{&#10;	step:"Start $(prettifyFlowName(flow.name)) flow",&#10;	data: {}&#10;}]' category="solo-sys-smtp" />
 	</flow>
 	<flow name="post:\events:application\json:Router" doc:id="fbec41d3-24cf-4750-8e49-53910089b4df" >
+		<logger level="INFO" doc:name="Start flow" doc:id="e376f74c-30e2-4cc2-82c7-012e42e00170" message='#[import prettifyFlowName from modules::ToolBox&#10;---&#10;{&#10;	step:"Start $(prettifyFlowName(flow.name)) flow",&#10;	data: {}&#10;}]' category="${app.name}" />
 		<flow-ref doc:name="postEvents" doc:id="18f5e9b7-6259-4da1-9014-134ac09bd637" name="postEvents"/>
 		<ee:transform doc:name="Transform Message" doc:id="33368467-303f-4b45-a326-2be0b9dd790f" >
 			<ee:message >
@@ -33,5 +34,6 @@ output application/json
 } as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+		<logger level="INFO" doc:name="End flow" doc:id="124b0fe7-f7cb-4db0-ae29-6fce1844e45d" message='#[import prettifyFlowName from modules::ToolBox&#10;---&#10;{&#10;	step:"Start $(prettifyFlowName(flow.name)) flow",&#10;	data: {}&#10;}]' category="solo-sys-smtp" />
 	</flow>
 </mule>
