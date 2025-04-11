@@ -3,6 +3,7 @@ https:
   
 api:
   basePath: "/api/v1"
+  autodiscovery: "20293764"
   
 smtp:
   host: "smtp.sendgrid.net"
